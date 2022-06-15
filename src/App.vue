@@ -1,15 +1,35 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <input type="file" @change="previewFiles">
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import EXIF from 'exif-js';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
+  },
+  setup() {
+    const previewFiles = (event) => {
+      console.log(event.target.files);
+
+      EXIF.getData(event.target.files, () => {
+        const make = EXIF.getTag(this, 'Make');
+        const model = EXIF.getTag(this, 'Model');
+        console.log(make);
+        console.log(model);
+      });
+
+      EXIF.getData(event.target.files, () => {
+        const orientation = EXIF.getTag(this, 'Orientation');
+        console.log(orientation);
+      });
+    };
+
+    return {
+      previewFiles,
+    };
   },
 };
 </script>
